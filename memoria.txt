@@ -1,0 +1,66 @@
+-Primer paso que se me ocurrión: Usar filtro de mediana aprovechando que este respeta los bordes
+
+      -Me elimina la figura de abajo a la izquierda y anula algo de ruido, pero no lo suficiente
+
+-Segundo: Usar un filtro de medias con algún array horizontal para así rebajar las franjas blancas de
+ruido y poder umbralizarlas
+
+      -Esto funciona bien, e incluso mejor aplicando el adjustIntensity después para así hacer que lo negro
+      se vea más negro
+
+        -Para que queremos eso último? Para así aplicar la función umbralize y hacer que todo lo que no tenga
+        el valor de blanco más alto pase a ser negro, esto nos permite quedarnos solo con los valores de
+        la lente y la cornea
+
+  -Tercero: Aplicar un filtro de medianas para así eliminar ruido
+
+      -Reutilizamos aquí el primer paso aprovechando la ventaja mencionada antes, de esta forma eliminamos algo
+      del reuido restante que nos queda.
+
+-Tercero y medio: Apliqué una segmentación de regiones eliminando los valores que queden con menos valor que un
+umbral arbitrario (es decir, los que no sobrepasen dicho umbral, son puestos a 0). Esto me permite tener una imagen
+relativamente cribada de ruido, con la ventaja de que puedo alterar el valor de umbralización para tenerla más o menos
+cribada (a expensas de la representación de la lente y córnea) dependiendo de la imagen
+
+
+-Cuarto: Realizar las mediciones:
+
+      -Para esto trazamos "rayas" de forma vertical en la imagen. Cuando la raya toca sus primeros valores blancos
+      de acorde al filtro establecido, sabemos que ha llegado a la lente. Cuando toca la segunda parte de la lente,
+      sabemos que debemos de empezar a contar para así saber que distancia hay. Por último, al llegar a la córnea
+      paramos de contar, y enviamos el valor a la lista de distancias lente-corena. Una vez que hemos repetido
+      el proceso una cantidad sustancial de veces, sacamos la mediana de dicha lista (para tener tolerancia a
+      posibles valores mal medidos). Esa será la distancia final escogida
+
+-Quinto: Representación gráfica de las mediciones:
+
+      -Para este paso, nos quedamos con los valores de (x,y) en las medidiones anteriores al salir de la lente, así
+      como la distancia de la lente a la córnea. Una vez conseguida toda esta información, se imprimen líneas para dichos
+      valores en (x,y) haciendo que vaya hasta tantas filas como valor tenga la distancia de medición. Para poder diferenciarse
+      de la propia imagen, las lineas se han pintado con un color gris oscuro
+
+-Sexto: Añadir color
+
+        -Llegados a este punto, me enteré de que había que darle algo de notación de color a la salida, además de también
+        marcar las lineas entre la primera parte de la lente y la segunda. Me puse a intentar adaptarlo
+
+        -Al principio tuve bastantes problemas para representar los colores, principalmente por la falta de manejo con las
+        librerias. Al final, mediante la libreria PIL pude encontrar una forma de representar colores. Utilizo azul, verde y rojo para
+        indicar poca, adecuada, o mucha distancia respectivamente. Para comparar dichas distancias, empleo la mediana de
+        los valores que tomo en las mediciones, y calculo en base a eso
+
+
+-Septimo: Perfeccionar en las imagenes con peores resultados
+
+        -A estas alturas, la practica ya funciona correctamente para la mayoría de imágenes. Sin embargo, existen unas cuantas para los que,
+        aun imprimiendo valores aceptables, las mediciones son considerablemente peores que en el resto (estas son: imagenes nº 4,6,8 y 12).
+        A continuación procederé a intentar mejorarlas para así tener una resultado con mejor tasa de acierto
+
+              -Se me ocurrió aplicar alguna de las detecciones de regiones vistas hasta ahora, aplicando primeramente el histograma para ver en
+              que valores el ruído empieza a disminuir
+
+              -También probé a modificar mi filtro de medianas, de forma que ahora se le pueda poner una línea de parada para así aplicarse solo
+              hasta una parte de la imagen (preferiblemente la de arriba, pues ahí es donde se acumula más ruido). Esto demostró ser bastante positivo,
+              ya que hace un buen trabajo eliminando el ruido restante de aplicar primeramente el filtro
+
+-Inciso: Ahora mismo, sin tocar valores de filtro de medianas y umbral, funciona mal para la 4, la 6, la 8 y la 12
