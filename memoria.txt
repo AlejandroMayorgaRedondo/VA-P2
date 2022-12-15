@@ -63,4 +63,14 @@ cribada (a expensas de la representación de la lente y córnea) dependiendo de 
               hasta una parte de la imagen (preferiblemente la de arriba, pues ahí es donde se acumula más ruido). Esto demostró ser bastante positivo,
               ya que hace un buen trabajo eliminando el ruido restante de aplicar primeramente el filtro
 
+              -IDEA: En vez de utilizar un valor arbitrario para la umbralización, aplicar algun valor  variable como un percentil dado el histograma
+              o la moda
+
+              -Despues de hablar con el profe, comencé a ver que tal iban los operadores morfológicos. Descubrí que aplicando la operación de opening
+              conseguíamos unos resultados practicamente perfectos para la mayoría de imágenes. El único problema es que, al tener que utilizar un
+              kernel fijo (un array horizontal) este no funciona bien para casos de imágenes rotadas, como lo son im6 e im8
+
 -Inciso: Ahora mismo, sin tocar valores de filtro de medianas y umbral, funciona mal para la 4, la 6, la 8 y la 12
+
+
+-Prepocesado morfológico, operadores laterales de filtrado
